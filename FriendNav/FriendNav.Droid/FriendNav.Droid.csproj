@@ -226,6 +226,7 @@
   <ItemGroup>
     <Compile Include="DebugTrace.cs" />
     <Compile Include="LinkerPleaseInclude.cs" />
+    <Compile Include="Services\GPSService.cs" />
     <Compile Include="Services\LocationUpdateService.cs" />
     <Compile Include="Services\NotificationService.cs" />
     <Compile Include="Setup.cs" />

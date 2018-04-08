@@ -17,21 +17,41 @@ using FriendNav.Core.ViewModels;
 using Android.Support.V4.Content;
 using Android;
 using Android.Content.PM;
+using FriendNav.Droid.Services;
+using MvvmCross.Platform;
+using MvvmCross.Platform.Droid.Platform;
 //using FriendNav.Core;
 
 namespace FriendNav.Droid.Views
 {
     [Activity(Label = "Map")]
-    public class MapView : BaseView, IOnMapReadyCallback,ILocationListener
+    //public class MapView : BaseView, IOnMapReadyCallback,ILocationListener,IServiceConnection
+    public class MapView : BaseView, IOnMapReadyCallback
     {
         protected override int LayoutResource => Resource.Layout.MapView;
 
+        protected LocationManager _locationManager = (LocationManager)Android.App.Application.Context.GetSystemService(LocationService);
+
         private GoogleMap GMap;
+        private string test;
+
+        GPSServiceBinder _binder;
+        GPSServiceConnection _gpsServiceConnection;
+        Intent _gpsServiceIntent;
+
+        // events, interfaced created in core library 
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             SetUpMap();
+            test = "in oncreate";
+
+            _gpsServiceConnection = new GPSServiceConnection(_binder);
+            _gpsServiceIntent = new Intent(Android.App.Application.Context, typeof(GPSService));
+            BindService(_gpsServiceIntent, _gpsServiceConnection, Bind.AutoCreate);
+
+
         }
 
         private void SetUpMap()
@@ -55,44 +75,15 @@ namespace FriendNav.Droid.Views
             
             //var t = (MapViewModel)ViewModel;
 
-           /* LatLng latlng = new LatLng(Convert.ToDouble(13.0291), Convert.ToDouble(80.2083));
+            LatLng latlng = new LatLng(Convert.ToDouble(13.0291), Convert.ToDouble(80.2083));
             CameraUpdate camera = CameraUpdateFactory.NewLatLngZoom(latlng, 15);
             GMap.MoveCamera(camera);
             MarkerOptions options = new MarkerOptions().SetPosition(latlng).SetTitle("Chennai");
-            GMap.AddMarker(options);*/
+            GMap.AddMarker(options);
 
-
+         
         }
 
-        public void OnLocationChanged(Location location)
-        {
-            //throw new NotImplementedException();
-            if (null != location)
-            {
-                double latitude = location.Latitude;
-                double longitude = location.Longitude;
-                LatLng latlng = new LatLng(latitude,longitude);
-                CameraUpdate camera = CameraUpdateFactory.NewLatLngZoom(latlng, 15);
-                GMap.MoveCamera(camera);
-                MarkerOptions options = new MarkerOptions().SetPosition(latlng).SetTitle("MyLocation");
-                GMap.AddMarker(options);
-            }
 
-        }
-
-        public void OnProviderDisabled(string provider)
-        {
-            //throw new NotImplementedException();
-        }
-
-        public void OnProviderEnabled(string provider)
-        {
-           // throw new NotImplementedException();
-        }
-
-        public void OnStatusChanged(string provider, [GeneratedEnum] Availability status, Bundle extras)
-        {
-            //throw new NotImplementedException();
-        }
     }
 }

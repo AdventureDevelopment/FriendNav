@@ -16,11 +16,12 @@ namespace FriendNav.Droid.Services
 {
     public class LocationUpdateService: ILocationUpdateService
     {
-        Android.Gms.Location.FusedLocationProviderClient fusedLocationProviderClient;
+        //Android.Gms.Location.FusedLocationProviderClient fusedLocationProviderClient;
+        string initiatorLatiude;
 
         public string getInitiatorLatitue() {
-            string returnValue = "200";
-            return returnValue;
+
+            return this.initiatorLatiude;
         }
     }
 }
