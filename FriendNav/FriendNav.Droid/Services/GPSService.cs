@@ -14,11 +14,15 @@ using Android.Gms.Maps;
 using Android.Gms.Maps.Model;
 
 using FriendNav.Core.ViewModels;
+using FriendNav.Core.Services.Interfaces;
+using MvvmCross.Platform;
+using FriendNav.Core.Utilities;
 
 namespace FriendNav.Droid.Services
 {
-    class GPSService : Service,ILocationListener
+    class GPSService : Service, ILocationListener
     {
+        private readonly ILocationUpdateService _locationUpdateService;
 
         IBinder _binder;
         private string test;
@@ -26,7 +30,10 @@ namespace FriendNav.Droid.Services
        // private readonly NotificationService _notificationService;
         protected LocationManager _locationManager = (LocationManager)Android.App.Application.Context.GetSystemService(LocationService);
 
-        
+        public GPSService()
+        {
+            _locationUpdateService = Mvx.Resolve<ILocationUpdateService>();
+        }
 
         //public object Vm { get => vm; set => vm = value; }
 
@@ -48,9 +55,6 @@ namespace FriendNav.Droid.Services
 
             var locationProvider = _locationManager.GetBestProvider(criteriaForGPSService, true);
             _locationManager.RequestLocationUpdates(locationProvider, 0, 0, this);
-
-            
-
         }
 
         public void OnLocationChanged(Location location)
@@ -59,11 +63,12 @@ namespace FriendNav.Droid.Services
             {
                 double latitude = location.Latitude;
                 double longitude = location.Longitude;
-                //LatLng latlng = new LatLng(latitude, longitude);
 
-                Intent intent = new Intent(this, typeof(MapView));
-
-
+                _locationUpdateService.LocationChanged?.Invoke(this, new LocationChangeEventArgs
+                {
+                    Latitude = latitude.ToString(),
+                    Longitude = longitude.ToString()
+                });
             }
             else
             {

@@ -21,8 +21,9 @@ namespace FriendNav.Core.ViewModels
         private readonly INavigationRequestService _navigationRequestService;
         private readonly IMvxNavigationService _mvxNavigationService;
         private readonly IFirebaseAuthService _firebaseAuthService;
+        private readonly ILocationUpdateService _locationUpdateService;
 
-        private Boolean _endNavigation, _isCallingActivityInitiator;
+        private bool _isCallingActivityInitiator;
 
         public MvxCommand SendNavigationFriendListRequestCommand { get; }
         public MvxCommand OnLocationChangeCommand { get; }
@@ -36,7 +37,8 @@ namespace FriendNav.Core.ViewModels
             INavigateRequestRepository navigateRequestRepository,
             INavigationRequestService navigationRequestService,
             IMvxNavigationService mvxNavigationService,
-            IFirebaseAuthService firebaseAuthService
+            IFirebaseAuthService firebaseAuthService,
+            ILocationUpdateService locationUpdateService
             )
         {
             _task = task;
@@ -46,37 +48,84 @@ namespace FriendNav.Core.ViewModels
             _navigationRequestService = navigationRequestService;
             _mvxNavigationService = mvxNavigationService;
             _firebaseAuthService = firebaseAuthService;
+            _locationUpdateService = locationUpdateService;
+
+
+            _locationUpdateService.LocationChanged += LocationUpdateService_LocationChanged;
 
             SendNavigationFriendListRequestCommand = new MvxCommand(SendEndNavigationAndMarkAsEnded);
-            OnLocationChangeCommand = new MvxCommand(OnLocationChangedAsync);
+        }
+
+        private void LocationUpdateService_LocationChanged(object sender, LocationChangeEventArgs e)
+        {
+            _map.UpdateActiveUserCords(e.Latitude, e.Longitude);
+            _mapRepository.UpdateMap(_map);
+            CurrentUserLatitude = e.Latitude;
+            CurrentUserLongitude = e.Longitude;
+        }
+
+        private void map_OtherUserCordinatesUpdated(object sender, EventArgs e)
+        {
+            if (_map.IsInitiator)
+            {
+                OtherUserLatitude = _map.InitiatorLatitude;
+                OtherUserLongitude = _map.InitiatorLongitude;
+            }
+            else
+            {
+                OtherUserLatitude = _map.ResponderLatitude;
+                OtherUserLongitude = _map.ResponderLongitude;
+            }
         }
 
         public override void Prepare(Map parameter)
         {
             _map = parameter;
+            _map.OtherUserCordinatesUpdated += map_OtherUserCordinatesUpdated;
         }
 
-        
-        private void OnMapReady(Map map)
+        private string _currentUserLatitude;
+        public string CurrentUserLatitude
         {
-            _map = _mapRepository.GetMap(_map.ChatFirebaseKey);
-        }
-
-        private void OnLocationChangedAsync()
-        {
-            _task.Run(OnLocationChanged);
-        }
-
-        // map argument is from google location
-        private void OnLocationChanged()
-        {
-            if (!_endNavigation)
+            get => _currentUserLatitude;
+            set
             {
-                _map = _mapRepository.GetMap(_map.ChatFirebaseKey);
-
-                TestLocationChangeHook?.NotifyOtherThreads();
+                _currentUserLatitude = value;
+                RaisePropertyChanged();
             }
-            return;
+        }
+
+        private string _currentUserLongitude;
+        public string CurrentUserLongitude
+        {
+            get => _currentUserLongitude;
+            set
+            {
+                _currentUserLongitude = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private string _otherUserLatitude;
+        public string OtherUserLatitude
+        {
+            get => _currentUserLatitude;
+            set
+            {
+                _currentUserLatitude = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private string _otherUserLongitude;
+        public string OtherUserLongitude
+        {
+            get => _otherUserLongitude;
+            set
+            {
+                _otherUserLongitude = value;
+                RaisePropertyChanged();
+            }
         }
 
         private void SendEndNavigationAndMarkAsEndedAsync()

@@ -69,6 +69,11 @@ namespace FriendNav.Core.Repositories
             return map;
         }
 
+        public void UpdateMap(Map map)
+        {
+
+        }
+
         public void Dispose()
         {
             foreach(var disposable in _disposable)

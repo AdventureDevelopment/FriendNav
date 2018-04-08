@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FriendNav.Core.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,6 +7,6 @@ namespace FriendNav.Core.Services.Interfaces
 {
     public interface ILocationUpdateService
     {
-        string getInitiatorLatitue();
+        EventHandler<LocationChangeEventArgs> LocationChanged { get; set; }
     }
 }

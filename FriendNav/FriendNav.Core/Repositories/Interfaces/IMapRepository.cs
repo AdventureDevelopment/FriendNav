@@ -8,5 +8,7 @@ namespace FriendNav.Core.Repositories.Interfaces
     public interface IMapRepository : IDisposable
     {
         Map GetMap(string chatFirebaseKey);
+
+        void UpdateMap(Map map);
     }
 }
