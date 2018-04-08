@@ -63,8 +63,8 @@ namespace FriendNav.Droid.Services
             {
                 double latitude = location.Latitude;
                 double longitude = location.Longitude;
-
-                _locationUpdateService.LocationChanged?.Invoke(this, new LocationChangeEventArgs
+            
+                _locationUpdateService.OnLocationChanged(new LocationChangeEventArgs
                 {
                     Latitude = latitude.ToString(),
                     Longitude = longitude.ToString()

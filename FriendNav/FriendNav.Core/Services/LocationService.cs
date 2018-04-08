@@ -8,6 +8,11 @@ namespace FriendNav.Core.Services
 {
     public class LocationService : ILocationUpdateService
     {
-        public EventHandler<LocationChangeEventArgs> LocationChanged { get; }
+        public event EventHandler<LocationChangeEventArgs> LocationChanged;
+
+        public void OnLocationChanged(LocationChangeEventArgs locationChangeEventArgs)
+        {
+            LocationChanged?.Invoke(this, locationChangeEventArgs);
+        }
     }
 }

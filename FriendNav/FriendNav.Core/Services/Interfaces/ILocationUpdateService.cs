@@ -7,6 +7,8 @@ namespace FriendNav.Core.Services.Interfaces
 {
     public interface ILocationUpdateService
     {
-        EventHandler<LocationChangeEventArgs> LocationChanged { get; set; }
+        event EventHandler<LocationChangeEventArgs> LocationChanged;
+
+        void OnLocationChanged(LocationChangeEventArgs locationChangeEventArgs);
     }
 }
