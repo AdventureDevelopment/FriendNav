@@ -17,6 +17,7 @@ using FriendNav.Core.ViewModels;
 using FriendNav.Core.Services.Interfaces;
 using MvvmCross.Platform;
 using FriendNav.Core.Utilities;
+using FriendNav.Droid.Views;
 
 namespace FriendNav.Droid.Services
 {
@@ -26,8 +27,7 @@ namespace FriendNav.Droid.Services
 
         IBinder _binder;
         private string test;
-        //public Context CurrentContext => Mvx.Resolve<IMvxAndroidCurrentTopActivity>().Activity;
-       // private readonly NotificationService _notificationService;
+
         protected LocationManager _locationManager = (LocationManager)Android.App.Application.Context.GetSystemService(LocationService);
 
         public GPSService()
@@ -69,6 +69,13 @@ namespace FriendNav.Droid.Services
                     Latitude = latitude.ToString(),
                     Longitude = longitude.ToString()
                 });
+                Intent intent = new Intent(this, typeof(FriendNav.Droid.Views.MapView.GPSServiceReciever));
+                intent.SetAction(FriendNav.Droid.Views.MapView.GPSServiceReciever.LOCATION_UPDATED);
+                intent.AddCategory(Intent.CategoryDefault);
+
+                intent.PutExtra("Lattitude", latitude.ToString());
+                intent.PutExtra("Longitude", longitude.ToString());
+                SendBroadcast(intent);
             }
             else
             {
@@ -130,4 +137,3 @@ namespace FriendNav.Droid.Services
     }
 }
 
-//service interface/ one event/
