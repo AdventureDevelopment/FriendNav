@@ -24,13 +24,18 @@ using MvvmCross.Platform.Droid.Platform;
 
 namespace FriendNav.Droid.Views
 {
+    
     [Activity(Label = "Map")]
     //public class MapView : BaseView, IOnMapReadyCallback,ILocationListener,IServiceConnection
     public class MapView : BaseView, IOnMapReadyCallback
     {
+        
         protected override int LayoutResource => Resource.Layout.MapView;
 
-        protected LocationManager _locationManager = (LocationManager)Android.App.Application.Context.GetSystemService(LocationService);
+        public string lattitude = "500";
+        public string longitude = "500";
+
+        //protected LocationManager _locationManager = (LocationManager)Android.App.Application.Context.GetSystemService(LocationService);
 
         private GoogleMap GMap;
         private string test;
@@ -38,6 +43,9 @@ namespace FriendNav.Droid.Views
         GPSServiceBinder _binder;
         GPSServiceConnection _gpsServiceConnection;
         Intent _gpsServiceIntent;
+        private GPSServiceReciever _receiver;
+
+        MarkerOptions _options;
 
         // events, interfaced created in core library 
 
@@ -47,11 +55,26 @@ namespace FriendNav.Droid.Views
             SetUpMap();
             test = "in oncreate";
 
+            _options = new MarkerOptions().SetTitle("CurrentPosition");
+
             _gpsServiceConnection = new GPSServiceConnection(_binder);
             _gpsServiceIntent = new Intent(Android.App.Application.Context, typeof(GPSService));
             BindService(_gpsServiceIntent, _gpsServiceConnection, Bind.AutoCreate);
 
 
+        }
+
+        private void RegisterBroadcastReceiver()
+        {
+            IntentFilter filter = new IntentFilter(GPSServiceReciever.LOCATION_UPDATED);
+            filter.AddCategory(Intent.CategoryDefault);
+            _receiver = new GPSServiceReciever(this);
+            RegisterReceiver(_receiver, filter);
+        }
+
+        private void UnRegisterBroadcastReceiver()
+        {
+            UnregisterReceiver(_receiver);
         }
 
         private void SetUpMap()
@@ -73,15 +96,59 @@ namespace FriendNav.Droid.Views
                 this.GMap.MyLocationEnabled = true;
             }
             
-            //var t = (MapViewModel)ViewModel;
+         
+        }
 
-            LatLng latlng = new LatLng(Convert.ToDouble(13.0291), Convert.ToDouble(80.2083));
+        public void UpdateUI(Intent intent)
+        {
+
+            this.lattitude = intent.GetStringExtra("Lattitude");
+            this.longitude = intent.GetStringExtra("Longitude");
+
+            LatLng latlng = new LatLng(Convert.ToDouble(this.lattitude), Convert.ToDouble(this.longitude));
             CameraUpdate camera = CameraUpdateFactory.NewLatLngZoom(latlng, 15);
             GMap.MoveCamera(camera);
-            MarkerOptions options = new MarkerOptions().SetPosition(latlng).SetTitle("Chennai");
-            GMap.AddMarker(options);
 
-         
+            this._options.Dispose();
+            this._options = new MarkerOptions().SetPosition(latlng).SetTitle("CurrentPosition");
+
+            GMap.AddMarker(this._options);
+        }
+
+        protected override void OnResume()
+        {
+            base.OnResume();
+            RegisterBroadcastReceiver();
+        }
+
+        protected override void OnPause()
+        {
+            base.OnPause();
+            UnRegisterBroadcastReceiver();
+        }
+        [BroadcastReceiver]
+        internal class GPSServiceReciever : BroadcastReceiver
+        {
+            public static readonly string LOCATION_UPDATED = "LOCATION_UPDATED";
+
+            private MapView mapViewInstance;
+
+            public GPSServiceReciever()
+            {
+                
+            }
+
+            public GPSServiceReciever(MapView instance)
+            {
+                this.mapViewInstance = instance;
+            }
+            
+            public override void OnReceive(Context context, Intent intent)
+            {
+                this.mapViewInstance.UpdateUI(intent);
+                
+
+            }
         }
 
 
