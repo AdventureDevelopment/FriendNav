@@ -17,9 +17,14 @@ using FriendNav.Core.ViewModels;
 using Android.Support.V4.Content;
 using Android;
 using Android.Content.PM;
+
 using FriendNav.Droid.Services;
+using FriendNav.Core.Services.Interfaces;
+using FriendNav.Core.Utilities;
+
 using MvvmCross.Platform;
 using MvvmCross.Platform.Droid.Platform;
+using Android.Support.V7.App;
 //using FriendNav.Core;
 
 namespace FriendNav.Droid.Views
@@ -27,26 +32,25 @@ namespace FriendNav.Droid.Views
     
     [Activity(Label = "Map")]
     //public class MapView : BaseView, IOnMapReadyCallback,ILocationListener,IServiceConnection
-    public class MapView : BaseView, IOnMapReadyCallback
+    public class MapView : BaseView, IOnMapReadyCallback, ILocationListener
     {
-        
+        const long TWO_SECONDS = 2 * 1000;
         protected override int LayoutResource => Resource.Layout.MapView;
+        private readonly ILocationUpdateService _locationUpdateService;
 
         public string lattitude = "500";
         public string longitude = "500";
 
-        //protected LocationManager _locationManager = (LocationManager)Android.App.Application.Context.GetSystemService(LocationService);
+        static readonly int RC_LAST_LOCATION_PERMISSION_CHECK = 1000;
 
         private GoogleMap GMap;
         private string test;
 
-        GPSServiceBinder _binder;
-        GPSServiceConnection _gpsServiceConnection;
-        Intent _gpsServiceIntent;
-        private GPSServiceReciever _receiver;
-
         MarkerOptions _options;
 
+        internal Button requestLocationUpdatesButton;
+
+        protected LocationManager _locationManager = (LocationManager)Android.App.Application.Context.GetSystemService(LocationService);
         // events, interfaced created in core library 
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -56,27 +60,74 @@ namespace FriendNav.Droid.Views
             test = "in oncreate";
 
             _options = new MarkerOptions().SetTitle("CurrentPosition");
+            requestLocationUpdatesButton = FindViewById<Button>(Resource.Id.request_location_updates_button);
 
-            _gpsServiceConnection = new GPSServiceConnection(_binder);
-            _gpsServiceIntent = new Intent(Android.App.Application.Context, typeof(GPSService));
-            BindService(_gpsServiceIntent, _gpsServiceConnection, Bind.AutoCreate);
+            if (_locationManager.AllProviders.Contains(LocationManager.NetworkProvider)
+                 && _locationManager.IsProviderEnabled(LocationManager.NetworkProvider))
+            {
 
+                requestLocationUpdatesButton.Click += RequestLocationUpdatesButtonOnClick;
+            }
+            else {
+                Log.Debug("FriendNav", "unhandled exception, insufficient permission.");
+            }
 
         }
 
-        private void RegisterBroadcastReceiver()
+        void RequestLocationUpdatesButtonOnClick(object sender, EventArgs eventArgs)
         {
-            IntentFilter filter = new IntentFilter(GPSServiceReciever.LOCATION_UPDATED);
-            filter.AddCategory(Intent.CategoryDefault);
-            _receiver = new GPSServiceReciever(this);
-            RegisterReceiver(_receiver, filter);
+
+                if (ContextCompat.CheckSelfPermission(this, Manifest.Permission.AccessFineLocation) == Permission.Granted)
+                {
+                    StartRequestingLocationUpdates();
+                    
+                }
+                else
+                {
+                    RequestLocationPermission(RC_LAST_LOCATION_PERMISSION_CHECK);
+                }
+            
         }
 
-        private void UnRegisterBroadcastReceiver()
+        void StartRequestingLocationUpdates()
         {
-            UnregisterReceiver(_receiver);
+            //requestLocationUpdatesButton.SetText(Resource.String.request_location_in_progress_button_text);
+            _locationManager.RequestLocationUpdates(LocationManager.GpsProvider, TWO_SECONDS, 1, this);
         }
+        void RequestLocationPermission(int requestCode)
+        {
 
+            /* if (ActivityCompat.ShouldShowRequestPermissionRationale(this, Manifest.Permission.AccessFineLocation))
+             {
+                 Snackbar.Make(rootLayout, Resource.String.permission_location_rationale, Snackbar.LengthIndefinite)
+                         .SetAction(Resource.String.ok,
+                                    delegate
+                                    {
+                                        ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.AccessFineLocation }, requestCode);
+                                    })
+                         .Show();
+             }
+             else
+             {
+                 ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.AccessFineLocation }, requestCode);
+             }*/
+
+            Permission permissionCheck = ContextCompat.CheckSelfPermission(this, Manifest.Permission.AccessFineLocation);
+
+            if (permissionCheck == Permission.Granted)
+            {
+                //Execute location service call if user has explicitly granted ACCESS_FINE_LOCATION..
+                this.GMap.MyLocationEnabled = true;
+
+                _locationManager.RequestLocationUpdates(LocationManager.GpsProvider, TWO_SECONDS, 1, this);
+            }
+            else
+            {
+                Log.Debug("FriendNav", "unhandled exception, insufficient permission.");
+            }
+
+
+        }
         private void SetUpMap()
         {
             if (GMap == null)
@@ -88,66 +139,78 @@ namespace FriendNav.Droid.Views
         {
             this.GMap = googleMap;
 
-            Permission permissionCheck = ContextCompat.CheckSelfPermission(this, Manifest.Permission.AccessFineLocation);
+           /* Permission permissionCheck = ContextCompat.CheckSelfPermission(this, Manifest.Permission.AccessFineLocation);
 
             if (permissionCheck == Permission.Granted)
             {
                 //Execute location service call if user has explicitly granted ACCESS_FINE_LOCATION..
                 this.GMap.MyLocationEnabled = true;
+
+                _locationManager.RequestLocationUpdates(LocationManager.GpsProvider, TWO_SECONDS, 1, this);
             }
-            
-         
-        }
+            else
+            {
+                Log.Debug("FriendNav", "unhandled exception, insufficient permission.");
+            }*/
 
-        public void UpdateUI(Intent intent)
-        {
-
-            this.lattitude = intent.GetStringExtra("Lattitude");
-            this.longitude = intent.GetStringExtra("Longitude");
-
-            LatLng latlng = new LatLng(Convert.ToDouble(this.lattitude), Convert.ToDouble(this.longitude));
-            CameraUpdate camera = CameraUpdateFactory.NewLatLngZoom(latlng, 15);
-            GMap.MoveCamera(camera);
-
-            this._options.Dispose();
-            this._options = new MarkerOptions().SetPosition(latlng).SetTitle("CurrentPosition");
-
-            GMap.AddMarker(this._options);
         }
 
         protected override void OnResume()
         {
             base.OnResume();
-            RegisterBroadcastReceiver();
+
         }
 
         protected override void OnPause()
         {
             base.OnPause();
-            UnRegisterBroadcastReceiver();
         }
-        [BroadcastReceiver]
-        internal class GPSServiceReciever : BroadcastReceiver
+
+        public void OnLocationChanged(Location location)
         {
-            public static readonly string LOCATION_UPDATED = "LOCATION_UPDATED";
-
-            private MapView mapViewInstance;
-
-            public GPSServiceReciever()
+            //throw new NotImplementedException();
+            if (null != location)
             {
-                
+                double latitude = location.Latitude;
+                double longitude = location.Longitude;
+                _locationUpdateService.OnLocationChanged(new LocationChangeEventArgs
+                {
+                    Latitude = latitude.ToString(),
+                    Longitude = longitude.ToString()
+                });
+
+                this.lattitude = latitude.ToString();
+                this.longitude = longitude.ToString();
+
+                LatLng latlng = new LatLng(Convert.ToDouble(this.lattitude), Convert.ToDouble(this.longitude));
+                CameraUpdate camera = CameraUpdateFactory.NewLatLngZoom(latlng, 15);
+                GMap.MoveCamera(camera);
+
+                this._options.Dispose();
+                this._options = new MarkerOptions().SetPosition(latlng).SetTitle("CurrentPosition");
+
+                GMap.AddMarker(this._options);
             }
+        }
 
-            public GPSServiceReciever(MapView instance)
-            {
-                this.mapViewInstance = instance;
-            }
-            
-            public override void OnReceive(Context context, Intent intent)
-            {
-                this.mapViewInstance.UpdateUI(intent);
-                
+        public void OnProviderDisabled(string provider)
+        {
+            //throw new NotImplementedException();
+            Log.Debug("FriendNav", "The provider " + provider + " is disabled.");
+        }
 
+        public void OnProviderEnabled(string provider)
+        {
+            //throw new NotImplementedException();
+            Log.Debug("FriendNav", "The provider " + provider + " is enabled.");
+        }
+
+        public void OnStatusChanged(string provider, [GeneratedEnum] Availability status, Bundle extras)
+        {
+            //throw new NotImplementedException();
+            if(status == Availability.OutOfService)
+            {
+                _locationManager.RemoveUpdates(this);
             }
         }
 

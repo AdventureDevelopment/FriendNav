@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="ApplicationName">FriendNav</string>
+  <string name="request_location_button_text">Request Location Updates</string>
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyD_zHJElZIVW3OSefLkrRY5NipPLTMsUnk</string>
   <string name="app_name">Friend Navigation</string>
   <string name="welcome1">Welcome to Friend Navigation!</string>
