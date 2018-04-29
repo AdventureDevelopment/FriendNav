@@ -27,7 +27,8 @@ namespace FriendNav.iOS.Views
 
             FriendListTableViewSource friendListTableViewSource = new FriendListTableViewSource(FriendListTable);
             set.Bind(friendListTableViewSource).To(vm => vm.FriendList);
-            set.Bind(friendListTableViewSource).To(t => t.NavigateToChatCommand);
+            set.Bind(friendListTableViewSource).For(s => s.SelectedItem).To(vm => vm.SelectedFriend);
+            set.Bind(friendListTableViewSource).For(s => s.SelectionChangedCommand).To(t => t.NavigateToChatCommand);
             set.Apply();
 
             FriendListTable.Source = friendListTableViewSource;

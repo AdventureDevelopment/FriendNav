@@ -6,7 +6,7 @@
     <scenes>
         <scene sceneID="750">
             <objects>
-                <viewController id="751" sceneMemberID="viewController">
+                <viewController id="751" sceneMemberID="viewController" storyboardIdentifier="ChatView" restorationIdentifier="ChatView" customClass="ChatView">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="748"/>
                         <viewControllerLayoutGuide type="bottom" id="749"/>
@@ -17,7 +17,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="759" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES">
-                                <rect key="frame" x="20" y="138" width="374" height="482"/>
+                                <rect key="frame" x="20" y="124" width="374" height="491"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="760">
@@ -30,8 +30,27 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="2603" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES">
+                                <rect key="frame" x="95" y="686" width="225" height="30"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="2612" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES">
+                                <rect key="frame" x="328" y="686" width="53" height="30"/>
+                                <state key="normal" title="Send"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="2956" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES">
+                                <rect key="frame" x="15" y="686" width="62" height="30"/>
+                                <state key="normal" title="Request"/>
+                            </button>
                         </subviews>
                     </view>
+                    <connections>
+                        <outlet property="ChatInput" destination="2603" id="name-outlet-2603"/>
+                        <outlet property="ChatSend" destination="2612" id="name-outlet-2612"/>
+                        <outlet property="ChatRequest" destination="2956" id="name-outlet-2956"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="753" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

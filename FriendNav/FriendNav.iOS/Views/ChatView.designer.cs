@@ -1,17 +1,46 @@
-﻿//
-// This file has been generated automatically by Visual Studio to store outlets and
-// actions made in the Xcode designer. If it is removed, they will be lost.
-// Manual changes to this file may not be handled correctly.
+﻿// WARNING
+//
+// This file has been generated automatically by Visual Studio from the outlets and
+// actions declared in your storyboard file.
+// Manual changes to this file will not be maintained.
 //
 using Foundation;
+using System;
+using System.CodeDom.Compiler;
 
 namespace FriendNav.iOS.Views
 {
-    [Register("ChatView")]
+    [Register ("ChatView")]
     partial class ChatView
     {
-        void ReleaseDesignerOutlets()
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
+        UIKit.UITextField ChatInput { get; set; }
+
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
+        UIKit.UIButton ChatRequest { get; set; }
+
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
+        UIKit.UIButton ChatSend { get; set; }
+
+        void ReleaseDesignerOutlets ()
         {
+            if (ChatInput != null) {
+                ChatInput.Dispose ();
+                ChatInput = null;
+            }
+
+            if (ChatRequest != null) {
+                ChatRequest.Dispose ();
+                ChatRequest = null;
+            }
+
+            if (ChatSend != null) {
+                ChatSend.Dispose ();
+                ChatSend = null;
+            }
         }
     }
 }
