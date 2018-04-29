@@ -40,7 +40,7 @@
                                 <rect key="frame" x="328" y="686" width="53" height="30"/>
                                 <state key="normal" title="Send"/>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="2956" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="2956" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES" customClass="ChatRequestButton" restorationIdentifier="ChatRequest">
                                 <rect key="frame" x="15" y="686" width="62" height="30"/>
                                 <state key="normal" title="Request"/>
                             </button>
@@ -49,7 +49,7 @@
                     <connections>
                         <outlet property="ChatInput" destination="2603" id="name-outlet-2603"/>
                         <outlet property="ChatSend" destination="2612" id="name-outlet-2612"/>
-                        <outlet property="ChatRequest" destination="2956" id="name-outlet-2956"/>
+                        <outlet property="ChatRequestButton" destination="2956" id="name-outlet-2956"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="753" userLabel="First Responder" sceneMemberID="firstResponder"/>

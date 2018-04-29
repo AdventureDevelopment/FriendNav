@@ -86,6 +86,10 @@
     <CodesignKey>iPhone Distribution</CodesignKey>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ChatRequestButton.cs" />
+    <Compile Include="ChatRequestButton.designer.cs">
+      <DependentUpon>ChatRequestButton.cs</DependentUpon>
+    </Compile>
     <Compile Include="DebugTrace.cs" />
     <Compile Include="FriendListCell.cs" />
     <Compile Include="FriendListCell.designer.cs">
@@ -112,6 +116,10 @@
     <Compile Include="Views\MainView.designer.cs">
       <DependentUpon>MainView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\RequestView.cs" />
+    <Compile Include="Views\RequestView.designer.cs">
+      <DependentUpon>RequestView.cs</DependentUpon>
+    </Compile>
     <None Include="app.config" />
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -120,6 +128,7 @@
     <InterfaceDefinition Include="Views\LoginView.storyboard" />
     <InterfaceDefinition Include="Views\FriendListView.storyboard" />
     <InterfaceDefinition Include="Views\ChatView.storyboard" />
+    <InterfaceDefinition Include="Views\RequestView.storyboard" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Setup.cs" />
