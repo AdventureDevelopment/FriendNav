@@ -19,6 +19,10 @@ namespace FriendNav.iOS.Views
 
         [Outlet]
         [GeneratedCode ("iOS Designer", "1.0")]
+        UIKit.UIButton ChatRequest { get; set; }
+
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
         UIKit.UIButton ChatSend { get; set; }
 
         void ReleaseDesignerOutlets ()
@@ -26,6 +30,11 @@ namespace FriendNav.iOS.Views
             if (ChatInput != null) {
                 ChatInput.Dispose ();
                 ChatInput = null;
+            }
+
+            if (ChatRequest != null) {
+                ChatRequest.Dispose ();
+                ChatRequest = null;
             }
 
             if (ChatSend != null) {
