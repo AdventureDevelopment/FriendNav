@@ -196,7 +196,9 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="Properties\AndroidManifest.xml" />
+    <None Include="Properties\AndroidManifest.xml">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Resources\AboutResources.txt" />
     <AndroidResource Include="Resources\layout\LoginView.axml">
       <SubType>Designer</SubType>
@@ -226,7 +228,6 @@
   <ItemGroup>
     <Compile Include="DebugTrace.cs" />
     <Compile Include="LinkerPleaseInclude.cs" />
-    <Compile Include="Services\GPSService.cs" />
     <Compile Include="Services\NotificationService.cs" />
     <Compile Include="Setup.cs" />
     <Compile Include="SplashScreen.cs" />
