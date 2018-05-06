@@ -16,16 +16,20 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="1078" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="1078" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES" customClass="RequestAcceptButton" customModule="RequestAcceptButton" restorationIdentifier="RequestAcceptButton">
                                 <rect key="frame" x="20" y="514" width="363" height="64"/>
                                 <state key="normal" title="Accept"/>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="1082" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="1082" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES" customClass="RequestRejectButton" customModule="RequestRejectButton" restorationIdentifier="RequestRejectButton">
                                 <rect key="frame" x="20" y="611" width="363" height="68"/>
                                 <state key="normal" title="Reject"/>
                             </button>
                         </subviews>
                     </view>
+                    <connections>
+                        <outlet property="RequestAcceptButton" destination="1078" id="name-outlet-1078"/>
+                        <outlet property="RequestRejectButton" destination="1082" id="name-outlet-1082"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="245" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
