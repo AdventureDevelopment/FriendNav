@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 using Android.App;
 using Android.Content;
@@ -32,10 +33,19 @@ using Android.Support.Design.Widget;
 namespace FriendNav.Droid.Views
 {
     [Activity(Label = "Map")]
+    class TimerCurrentState
+    {
+        public int counter = 0;
+        public Timer tmr;
+    }
     public class MapView : BaseView,IOnMapReadyCallback,ILocationListener
     {
-		const long TWO_SECONDS = 2 * 1000;
+        TimerCurrentState s;
+        const long TWO_SECONDS = 2 * 1000;
         protected override int LayoutResource => Resource.Layout.MapView;
+
+        public TimerCallback TimerDelegate { get => timerDelegate; set => timerDelegate = value; }
+
         private  ILocationUpdateService _locationUpdateService;
 
         public string lattitude = "500";
@@ -54,12 +64,19 @@ namespace FriendNav.Droid.Views
 
         View rootLayout;
 
+        public Timer tmr;
+        private TimerCallback timerDelegate;
+
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             SetUpMap();
             test = "in oncreate";
+            s = new TimerCurrentState();
+            timerDelegate = new TimerCallback(UpdateLocation);
+
+            tmr = new Timer(timerDelegate,s, 1000,1000);
 
             _locationManager = (LocationManager)GetSystemService(LocationService);
 
@@ -204,6 +221,23 @@ namespace FriendNav.Droid.Views
              {
                  Log.Debug("FriendNav", "unhandled exception, insufficient permission.");
              }*/
+
+        }
+
+        void UpdateLocation(Object state)
+        {
+            TimerCurrentState s = (TimerCurrentState)state;
+            s.counter++;
+
+            if (ContextCompat.CheckSelfPermission(this, Manifest.Permission.AccessFineLocation) == Permission.Granted)
+            {
+                StartRequestingLocationUpdates();
+
+            }
+            else
+            {
+                RequestLocationPermission(RC_LAST_LOCATION_PERMISSION_CHECK);
+            }
 
         }
 
