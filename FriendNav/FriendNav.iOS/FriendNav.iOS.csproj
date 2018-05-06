@@ -98,6 +98,14 @@
     <Compile Include="LinkerPleaseInclude.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
+    <Compile Include="RequestAcceptButton.cs" />
+    <Compile Include="RequestAcceptButton.designer.cs">
+      <DependentUpon>RequestAcceptButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RequestRejectButton.cs" />
+    <Compile Include="RequestRejectButton.designer.cs">
+      <DependentUpon>RequestRejectButton.cs</DependentUpon>
+    </Compile>
     <Compile Include="Services\NotificationService.cs" />
     <Compile Include="TableViewSource\FriendListTableViewSource.cs" />
     <Compile Include="Views\ChatView.cs" />
@@ -116,6 +124,10 @@
     <Compile Include="Views\MainView.designer.cs">
       <DependentUpon>MainView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\MapView.cs" />
+    <Compile Include="Views\MapView.designer.cs">
+      <DependentUpon>MapView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\RequestView.cs" />
     <Compile Include="Views\RequestView.designer.cs">
       <DependentUpon>RequestView.cs</DependentUpon>
@@ -129,6 +141,7 @@
     <InterfaceDefinition Include="Views\FriendListView.storyboard" />
     <InterfaceDefinition Include="Views\ChatView.storyboard" />
     <InterfaceDefinition Include="Views\RequestView.storyboard" />
+    <InterfaceDefinition Include="Views\MapView.storyboard" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Setup.cs" />
