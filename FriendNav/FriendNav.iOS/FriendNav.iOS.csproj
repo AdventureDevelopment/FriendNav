@@ -87,14 +87,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DebugTrace.cs" />
-    <Compile Include="FriendListCell.cs" />
-    <Compile Include="FriendListCell.designer.cs">
+    <Compile Include="UserInterface\ConversationCell.cs" />
+    <Compile Include="UserInterface\ConversationCell.designer.cs">
+      <DependentUpon>ConversationCell.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserInterface\FriendListCell.cs" />
+    <Compile Include="UserInterface\FriendListCell.designer.cs">
       <DependentUpon>FriendListCell.cs</DependentUpon>
     </Compile>
     <Compile Include="LinkerPleaseInclude.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
     <Compile Include="Services\NotificationService.cs" />
+    <Compile Include="TableViewSource\ConversationTableViewSource.cs" />
     <Compile Include="TableViewSource\FriendListTableViewSource.cs" />
     <Compile Include="Views\ChatView.cs" />
     <Compile Include="Views\ChatView.designer.cs">

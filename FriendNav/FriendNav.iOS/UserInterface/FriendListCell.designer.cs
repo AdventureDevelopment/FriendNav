@@ -9,7 +9,7 @@ using System;
 using System.CodeDom.Compiler;
 using UIKit;
 
-namespace FriendNav.iOS
+namespace FriendNav.iOS.UserInterface
 {
     [Register ("FriendListCell")]
     partial class FriendListCell

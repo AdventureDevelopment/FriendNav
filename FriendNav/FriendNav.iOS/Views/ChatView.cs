@@ -3,6 +3,9 @@ using System;
 using System.Drawing;
 
 using Foundation;
+using FriendNav.Core.ViewModels;
+using FriendNav.iOS.TableViewSource;
+using MvvmCross.Binding.BindingContext;
 using MvvmCross.iOS.Views;
 using UIKit;
 
@@ -19,7 +22,14 @@ namespace FriendNav.iOS.Views
         {
             base.ViewDidLoad();
 
-            // Perform any additional setup after loading the view, typically from a nib.
+            var set = this.CreateBindingSet<ChatView, ChatViewModel>();
+
+            var chatTableViewSource = new ConversationTableViewSource(ConversationListTable);
+            set.Bind(chatTableViewSource).To(vm => vm.Messages);
+            set.Apply();
+
+            ConversationListTable.Source = chatTableViewSource;
+            ConversationListTable.ReloadData();
         }
     }
 }

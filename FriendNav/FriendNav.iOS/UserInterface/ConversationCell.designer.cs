@@ -8,20 +8,20 @@ using Foundation;
 using System;
 using System.CodeDom.Compiler;
 
-namespace FriendNav.iOS.Views
+namespace FriendNav.iOS.UserInterface
 {
-    [Register ("ChatView")]
-    partial class ChatView
+    [Register ("ConversationCell")]
+    partial class ConversationCell
     {
         [Outlet]
         [GeneratedCode ("iOS Designer", "1.0")]
-        UIKit.UITableView ConversationListTable { get; set; }
+        UIKit.UILabel MessageLabel { get; set; }
 
         void ReleaseDesignerOutlets ()
         {
-            if (ConversationListTable != null) {
-                ConversationListTable.Dispose ();
-                ConversationListTable = null;
+            if (MessageLabel != null) {
+                MessageLabel.Dispose ();
+                MessageLabel = null;
             }
         }
     }

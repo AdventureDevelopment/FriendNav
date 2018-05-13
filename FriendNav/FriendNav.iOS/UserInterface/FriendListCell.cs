@@ -5,7 +5,7 @@ using MvvmCross.Binding.iOS.Views;
 using System;
 using UIKit;
 
-namespace FriendNav.iOS
+namespace FriendNav.iOS.UserInterface
 {
     public partial class FriendListCell : MvxTableViewCell
     {
