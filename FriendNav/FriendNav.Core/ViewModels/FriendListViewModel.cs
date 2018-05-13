@@ -117,7 +117,7 @@ namespace FriendNav.Core.ViewModels
 
         private void NavigateToSelectedFriendChatAsync()
         {
-            Task.Run(async () => await NavigateToSelectedFriendChat());
+            Task.Run(NavigateToSelectedFriendChat);
         }
 
         public async Task NavigateToSelectedFriendChat()

@@ -27,39 +27,34 @@ namespace FriendNav.Core.Model
 
         public bool IsNavigationActive { get; set; }
 
-        public bool IsRequestedAccepted { get; set; }
+        public bool IsRequestAccepted { get; set; }
+
+        public bool IsRequestDeclined { get; set; }
 
         public void IncomingNavigationRequest(FirebaseEvent<NavigateRequestDto> observer)
         {
             lock (_updateLock)
             {
-                if(IsNavigationActive == observer.Object.CallActive &&
-                    InitiatorEmail == observer.Object.InitiatorEmail &&
-                    IsRequestedAccepted == observer.Object.IsRequestedAccepted)
-                {
-                    return;
-                }
-
                 IsNavigationActive = observer.Object.CallActive;
                 InitiatorEmail = observer.Object.InitiatorEmail;
-                IsRequestedAccepted = observer.Object.IsRequestedAccepted;
+                IsRequestAccepted = observer.Object.IsRequestedAccepted;
+                IsRequestDeclined = observer.Object.IsRequestDeclined;
 
-                if (observer.Object.InitiatorEmail != ActiveUser.EmailAddress && IsNavigationActive)
+                if (observer.Object.InitiatorEmail != ActiveUser.EmailAddress
+                    && observer.Object.InitiatorEmail != string.Empty
+                    && IsNavigationActive)
                 {
                     NavigationReqest?.Invoke(this, new EventArgs());
                 }
 
-                if (observer.Object.InitiatorEmail == string.Empty)
+                if (IsRequestDeclined)
                 {
                     NavigationDeclined?.Invoke(this, new EventArgs());
                 }
 
-                if (IsInitiator && IsNavigationActive)
+                if (IsInitiator && IsNavigationActive && IsRequestAccepted)
                 {
-                    if (true == IsRequestedAccepted)
-                    {
-                        NavigationAccepted?.Invoke(this, new EventArgs());
-                    }
+                    NavigationAccepted?.Invoke(this, new EventArgs());
                 }             
             }
         }

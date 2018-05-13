@@ -51,7 +51,7 @@ namespace FriendNav.Core.IntegrationTests.ViewModels
 
             sut.Prepare(new NavigateRequestParameters { Chat = chat, NavigateRequest = navigationRequest });
 
-            sut.AcceptRequestCommand.Execute();
+            await sut.AcceptRequest();
 
             Assert.IsTrue(context.TestNavigationService.TestNavigations.Any(a => a.Parameter is Map));
 
@@ -93,7 +93,8 @@ namespace FriendNav.Core.IntegrationTests.ViewModels
 
             sut.Prepare(new NavigateRequestParameters { Chat = chat, NavigateRequest = navigationRequest });
 
-            await requestNavigationService.InitiatNavigationRequest(otherNavigationRequest);
+            await requestNavigationService.InitiatNavigationRequest(navigationRequest);
+            await requestNavigationService.AcceptNavigationRequest(otherNavigationRequest);
 
             testHook.ResetEvent.WaitOne();
 
@@ -173,7 +174,7 @@ namespace FriendNav.Core.IntegrationTests.ViewModels
 
             sut.Prepare(new NavigateRequestParameters { Chat = chat, NavigateRequest = navigateRequest });
 
-            sut.DeclineRequestCommand.Execute();
+            await sut.DeclineRequest();
 
             Assert.IsTrue(context.TestNavigationService.TestNavigations.Any(a => a.Parameter is ChatParameters));
             Assert.AreEqual(string.Empty, navigateRequest.InitiatorEmail);
