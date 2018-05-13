@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 
 using Foundation;
+using FriendNav.iOS.UserInterface;
 using MvvmCross.Binding.iOS.Views;
 using UIKit;
 
