@@ -68,8 +68,20 @@ namespace FriendNav.Core.Repositories
             return map;
         }
 
-        public void UpdateMap(Map map)
+        public async Task UpdateMap(Map map)
         {
+            var client = _firebaseClientService.CreateFirebaseClient();
+            await client
+            .Child("BasicChat")
+            .Child(map.ChatFirebaseKey)
+            .Child("meetRequest")
+            .PutAsync(new MapDto
+                {
+                InitiatorLatitude = map.InitiatorLatitude,
+                InitiatorLongitude = map.InitiatorLatitude,
+                ResponderLatitude = map.ResponderLatitude,
+                ResponderLongitude = map.ResponderLongitude
+            });
 
         }
 
