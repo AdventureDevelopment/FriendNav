@@ -58,12 +58,15 @@ namespace FriendNav.Core.ViewModels
 
         }
 
-        private void LocationUpdateService_LocationChanged(object sender, LocationChangeEventArgs e)
+
+        public async void LocationUpdateService_LocationChanged(object sender, LocationChangeEventArgs e)
         {
             _map.UpdateActiveUserCords(e.Latitude, e.Longitude);
-            _mapRepository.UpdateMap(_map);
+            
             CurrentUserLatitude = e.Latitude;
             CurrentUserLongitude = e.Longitude;
+
+            await _mapRepository.UpdateMap(_map);
         }
         private void map_OtherUserCordinatesUpdated(object sender, EventArgs e)
         {
