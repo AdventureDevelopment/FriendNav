@@ -22,6 +22,8 @@ namespace FriendNav.Core.ViewModels
         private readonly IMvxNavigationService _mvxNavigationService;
         private readonly IFirebaseAuthService _firebaseAuthService;
 
+        private readonly ILocationUpdateService _locationUpdateService;
+
         private Boolean _endNavigation, _isCallingActivityInitiator;
 
         public MvxCommand SendNavigationFriendListRequestCommand { get; }
@@ -36,7 +38,8 @@ namespace FriendNav.Core.ViewModels
             INavigateRequestRepository navigateRequestRepository,
             INavigationRequestService navigationRequestService,
             IMvxNavigationService mvxNavigationService,
-            IFirebaseAuthService firebaseAuthService
+            IFirebaseAuthService firebaseAuthService,
+            ILocationUpdateService locationUpdateService
             )
         {
             _mapRepository = mapRepository;
@@ -48,13 +51,88 @@ namespace FriendNav.Core.ViewModels
 
             SendNavigationFriendListRequestCommand = new MvxCommand(SendEndNavigationAndMarkAsEndedAsync);
             OnLocationChangeCommand = new MvxCommand(OnLocationChangedAsync);
+
+            _locationUpdateService = locationUpdateService;
+            _locationUpdateService.LocationChanged += LocationUpdateService_LocationChanged;
+
+
         }
+
+
+        public async void LocationUpdateService_LocationChanged(object sender, LocationChangeEventArgs e)
+        {
+            _map.UpdateActiveUserCords(e.Latitude, e.Longitude);
+            
+            CurrentUserLatitude = e.Latitude;
+            CurrentUserLongitude = e.Longitude;
+
+            await _mapRepository.UpdateMap(_map);
+        }
+        private void map_OtherUserCordinatesUpdated(object sender, EventArgs e)
+        {
+            if (_map.IsInitiator)
+            {
+                OtherUserLatitude = _map.InitiatorLatitude;
+                OtherUserLongitude = _map.InitiatorLongitude;
+            }
+            else
+            {
+                OtherUserLatitude = _map.ResponderLatitude;
+                OtherUserLongitude = _map.ResponderLongitude;
+            }
+        }
+
 
         public override void Prepare(Map parameter)
         {
             _map = parameter;
+            _map.OtherUserCordinatesUpdated += map_OtherUserCordinatesUpdated;
         }
-        
+        private string _currentUserLatitude;
+        public string CurrentUserLatitude
+        {
+            get => _currentUserLatitude;
+            set
+            {
+                _currentUserLatitude = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
+        private string _currentUserLongitude;
+        public string CurrentUserLongitude
+        {
+            get => _currentUserLongitude;
+            set
+            {
+                _currentUserLongitude = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private string _otherUserLatitude;
+        public string OtherUserLatitude
+        {
+            get => _currentUserLatitude;
+            set
+            {
+                _currentUserLatitude = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private string _otherUserLongitude;
+        public string OtherUserLongitude
+        {
+            get => _otherUserLongitude;
+            set
+            {
+                _otherUserLongitude = value;
+                RaisePropertyChanged();
+            }
+        }
+
         private async void OnMapReady(Map map)
         {
             _map = await _mapRepository.GetMap(_map.ChatFirebaseKey);
