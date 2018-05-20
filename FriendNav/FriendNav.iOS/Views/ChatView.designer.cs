@@ -17,11 +17,38 @@ namespace FriendNav.iOS.Views
         [GeneratedCode ("iOS Designer", "1.0")]
         UIKit.UITableView ConversationListTable { get; set; }
 
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
+        UIKit.UIButton MapButton { get; set; }
+
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
+        UIKit.UITextField MessageTextBox { get; set; }
+
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
+        UIKit.UIButton SendButton { get; set; }
+
         void ReleaseDesignerOutlets ()
         {
             if (ConversationListTable != null) {
                 ConversationListTable.Dispose ();
                 ConversationListTable = null;
+            }
+
+            if (MapButton != null) {
+                MapButton.Dispose ();
+                MapButton = null;
+            }
+
+            if (MessageTextBox != null) {
+                MessageTextBox.Dispose ();
+                MessageTextBox = null;
+            }
+
+            if (SendButton != null) {
+                SendButton.Dispose ();
+                SendButton = null;
             }
         }
     }

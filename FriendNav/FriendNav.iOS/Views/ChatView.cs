@@ -26,6 +26,9 @@ namespace FriendNav.iOS.Views
 
             var chatTableViewSource = new ConversationTableViewSource(ConversationListTable);
             set.Bind(chatTableViewSource).To(vm => vm.Messages);
+            set.Bind(MapButton).To(t => t.SendNavigationRequestCommand);
+            set.Bind(SendButton).To(t => t.AddNewMessageCommand);
+            set.Bind(MessageTextBox).To(t => t.ActiveMessage);
             set.Apply();
 
             ConversationListTable.Source = chatTableViewSource;
