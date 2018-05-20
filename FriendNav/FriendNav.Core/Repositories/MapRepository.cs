@@ -74,7 +74,7 @@ namespace FriendNav.Core.Repositories
             await client
             .Child("BasicChat")
             .Child(map.ChatFirebaseKey)
-            .Child("meetRequest")
+            .Child("MeetLocation")
             .PutAsync(new MapDto
                 {
                 InitiatorLatitude = map.InitiatorLatitude,
